@@ -213,7 +213,7 @@ where
 {
     fn set_owner(&mut self) -> VhostUserResult<()> {
         if self.owned {
-            return Err(VhostUserError::InvalidOperation);
+            return Err(VhostUserError::InvalidOperation("already owned"));
         }
         self.owned = true;
         Ok(())
@@ -447,7 +447,7 @@ where
         // This request should be handled only when VHOST_USER_F_PROTOCOL_FEATURES
         // has been negotiated.
         if self.acked_features & VhostUserVirtioFeatures::PROTOCOL_FEATURES.bits() == 0 {
-            return Err(VhostUserError::InvalidOperation);
+            return Err(VhostUserError::InactiveFeature(VhostUserVirtioFeatures::PROTOCOL_FEATURES));
         } else if index as usize >= self.num_queues {
             return Err(VhostUserError::InvalidParam);
         }
@@ -496,7 +496,7 @@ where
         // Assume the backend hasn't negotiated the inflight feature; it
         // wouldn't be correct for the backend to do so, as we don't (yet)
         // provide a way for it to handle such requests.
-        Err(VhostUserError::InvalidOperation)
+        Err(VhostUserError::InvalidOperation("inflight is not implemented"))
     }
 
     fn set_inflight_fd(
@@ -504,7 +504,7 @@ where
         _inflight: &vhost::vhost_user::message::VhostUserInflight,
         _file: File,
     ) -> VhostUserResult<()> {
-        Err(VhostUserError::InvalidOperation)
+        Err(VhostUserError::InvalidOperation("inflight is not implemented"))
     }
 
     fn get_max_mem_slots(&mut self) -> VhostUserResult<u64> {
