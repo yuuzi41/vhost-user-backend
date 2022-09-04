@@ -444,11 +444,7 @@ where
     }
 
     fn set_vring_enable(&mut self, index: u32, enable: bool) -> VhostUserResult<()> {
-        // This request should be handled only when VHOST_USER_F_PROTOCOL_FEATURES
-        // has been negotiated.
-        if self.acked_features & VhostUserVirtioFeatures::PROTOCOL_FEATURES.bits() == 0 {
-            return Err(VhostUserError::InactiveFeature(VhostUserVirtioFeatures::PROTOCOL_FEATURES));
-        } else if index as usize >= self.num_queues {
+        if index as usize >= self.num_queues {
             return Err(VhostUserError::InvalidParam);
         }
 
