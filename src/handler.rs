@@ -340,6 +340,8 @@ where
         let event_idx: bool = (self.acked_features & (1 << VIRTIO_RING_F_EVENT_IDX)) != 0;
 
         self.vrings[index as usize].set_queue_next_avail(base as u16);
+        // https://github.com/FDio/vpp/blob/fdc17b1ae7743bc37d4e08467d0295d6f277ec12/src/vnet/devices/virtio/vhost_user.c#L924
+        self.vrings[index as usize].set_queue_next_used(base as u16);
         self.vrings[index as usize].set_queue_event_idx(event_idx);
         self.backend.set_event_idx(event_idx);
 
