@@ -173,6 +173,16 @@ impl<M: GuestAddressSpace> VringState<M> {
     fn set_queue_next_avail(&mut self, base: u16) {
         self.queue.set_next_avail(base);
     }
+    
+    /// Get queue next avail head.
+    fn queue_next_used(&self) -> u16 {
+        self.queue.next_used()
+    }
+
+    /// Set queue next avail head.
+    fn set_queue_next_used(&mut self, base: u16) {
+        self.queue.set_next_used(base);
+    }
 
     /// Set configured queue size.
     fn set_queue_size(&mut self, num: u16) {
