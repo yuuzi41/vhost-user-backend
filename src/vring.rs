@@ -66,6 +66,12 @@ pub trait VringT<M: GuestAddressSpace>:
 
     /// Set queue next avail head.
     fn set_queue_next_avail(&self, base: u16);
+    
+    /// Get queue next avail head.
+    fn queue_next_used(&self) -> u16;
+
+    /// Set queue next avail head.
+    fn set_queue_next_used(&self, base: u16);
 
     /// Set configured queue size.
     fn set_queue_size(&self, num: u16);
@@ -313,6 +319,14 @@ impl<M: 'static + GuestAddressSpace> VringT<M> for VringMutex<M> {
         self.lock().set_queue_next_avail(base)
     }
 
+    fn queue_next_used(&self) -> u16 {
+        self.get_ref().queue_next_used()
+    }
+
+    fn set_queue_next_used(&self, base: u16) {
+        self.lock().set_queue_next_used(base)
+    }
+    
     fn set_queue_size(&self, num: u16) {
         self.lock().set_queue_size(num);
     }
@@ -413,6 +427,14 @@ impl<M: 'static + GuestAddressSpace> VringT<M> for VringRwLock<M> {
 
     fn set_queue_next_avail(&self, base: u16) {
         self.write_lock().set_queue_next_avail(base)
+    }
+    
+    fn queue_next_used(&self) -> u16 {
+        self.get_ref().queue_next_used()
+    }
+
+    fn set_queue_next_used(&self, base: u16) {
+        self.write_lock().set_queue_next_used(base)
     }
 
     fn set_queue_size(&self, num: u16) {
